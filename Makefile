@@ -8,7 +8,7 @@
 CC = gcc
 CFLAGS = -Wall -W -pedantic
 CFLAGS += -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants -Wno-unused-parameter
-CFLAGS += -O2 -I. -g -DiOS10
+CFLAGS += -O2 -I. -g -DiOS10 -Iinclude
 CFLAGS += -DDER_MULTIBYTE_TAGS=1 -DDER_TAG_SIZE=8
 CFLAGS += -D__unused="__attribute__((unused))"
 
@@ -32,7 +32,8 @@ endif
 endif
 
 SOURCES = \
-	img4.c
+	img4.c \
+	sepsplit.c
 
 LIBSOURCES = \
 	lzss.c

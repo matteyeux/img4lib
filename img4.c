@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <include/sepsplit.h>
 #include "libvfs/vfs.h"
 
 #define FOURCC(tag) (unsigned char)((tag) >> 24), (unsigned char)((tag) >> 16), (unsigned char)((tag) >> 8), (unsigned char)(tag)
@@ -364,6 +365,7 @@ usage(const char *argv0)
     printf("    -o <file>       write image to <file>\n");
     printf("    -k <ivkey>      use <ivkey> to decrypt\n");
     printf("    -z              operate on compressed data\n");
+    printf("    -s              split decrypted SEP firmware\n");
     printf("getters:\n");
     printf("    -e <file>       write extra to <file>\n");
     printf("    -g <file>       write keybag to <file>\n");
@@ -424,6 +426,7 @@ main(int argc, char **argv)
     int set_convert = 0;
     int set_wrap = 0;
     int img4flags = 0;
+	int do_sep_split = 0;
 
     int rv, rc = 0;
     unsigned char *buf;
@@ -460,6 +463,9 @@ main(int argc, char **argv)
             case 'A':
                 set_wrap = 1;
                 continue;
+			case 's':
+				do_sep_split = 1;
+				continue;
             case 'z':
                 img4flags |= FLAG_IMG4_SKIP_DECOMPRESSION;
                 continue;
@@ -534,6 +540,12 @@ main(int argc, char **argv)
     }
 
     // open
+
+	if (do_sep_split) {
+        sep_split(iname);
+
+		return 0;
+	}
 
     if (!modify) {
         fd = img4_reopen(file_open(iname, O_RDONLY), k, img4flags);
@@ -736,6 +748,7 @@ main(int argc, char **argv)
         }
         rc |= rv;
     }
+
 
     // close
 
